@@ -11,10 +11,13 @@ def fourierDesciptor(res):
     gray = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
     dst = cv2.Laplacian(gray, cv2.CV_16S, ksize = 3)
     Laplacian = cv2.convertScaleAbs(dst)
+    # cv2.imwrite('C:/Users/50493/Desktop/test1.png', Laplacian)
     contour = find_contours(Laplacian)#提取轮廓点坐标
+    # print(contour)
     contour_array = contour[0][:, 0, :]#注意这里只保留区域面积最大的轮廓点坐标
     ret_np = np.ones(dst.shape, np.uint8) #创建黑色幕布
     ret = cv2.drawContours(ret_np,contour[0],-1,(255,255,255),1) #绘制白色轮廓
+    # cv2.imwrite('C:/Users/50493/Desktop/test2.png', ret)
     contours_complex = np.empty(contour_array.shape[:-1], dtype=complex)
     contours_complex.real = contour_array[:,0]#横坐标作为实数部分
     contours_complex.imag = contour_array[:,1]#纵坐标作为虚数部分

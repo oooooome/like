@@ -8,6 +8,7 @@ from functools import reduce
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
+import time
 
 path = './' + 'feature' + '/'
 model_path = "./model/"
@@ -86,14 +87,19 @@ def test_SVM(clf,N):
 	testFileList = listdir(test_path)
 	errorCount = 0#记录错误个数
 	mTest = len(testFileList)
+	sTime = time.time()
 	for i in range(mTest):
 		fileNameStr = testFileList[i]
 		classNum = int(fileNameStr.split('_')[0])
 		vectorTest = txtToVector(test_path+fileNameStr,N)
 		valTest = clf.predict(vectorTest)
-		#print("分类返回结果为%d\t真实结果为%d" % (valTest, classNum))
+		if classNum == 9:
+			print("分类返回结果为%d\t真实结果为%d" % (valTest, classNum))
 		if valTest != classNum:
 			errorCount += 1
+	eTime = time.time()
+	costTime = (eTime - sTime) / mTest
+	print("cost time:" + str(costTime))
 	print("总共错了%d个数据\n错误率为%f%%" % (errorCount, errorCount/mTest * 100))
 
 
@@ -114,6 +120,7 @@ def test_efd(efd_test):
 ####训练 + 验证#####
 
 if __name__ == "__main__":
+	'''
 	for i in range (1, 21):
 		tran_KNN(15, i)
 		neigh_efd = joblib.load(model_path + "knn_efd_"+str(i) + "_train_model.m")
@@ -123,7 +130,8 @@ if __name__ == "__main__":
 	plt.xlabel("Value of K for KNN")
 	plt.ylabel("Testing Accuracy")
 	plt.savefig("knn_efd")
-	tran_SVM(15)
+	'''
+	# tran_SVM(15)
 	clf = joblib.load(model_path + "svm_efd_" + "train_model.m")
 	test_SVM(clf,15)
 

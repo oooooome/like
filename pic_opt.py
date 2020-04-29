@@ -1,14 +1,15 @@
 import cv2
 import os
 
-path = 'C:/Users/50493/Desktop/test1/'
-outpath = './' + 'images-like' + '/'
+# path = 'C:/Users/50493/Desktop/test1/'
+path = './feature-like/'
+outpath = './' + 'feature' + '/'
 
 if __name__ == '__main__':
+    #改文件名
     fileList = os.listdir(path)
-    print(len(fileList))
-    for i in range(len(fileList)):
-        print(path + fileList[i])
-        pic = cv2.imread(path + fileList[i])
-        res = cv2.resize(pic, (300, 300), interpolation=cv2.INTER_CUBIC)
-        cv2.imwrite(outpath + "1_" + str(i + 1) + ".png", res)
+    for i in range(1, 501):
+        used_name = path + "like_" + str(i) + ".txt"
+        new_name = path + "11_" + str(i) + ".txt"
+        os.rename(used_name, new_name)
+        # print("文件%s重命名成功,新的文件名为%s" % (used_name, new_name))
