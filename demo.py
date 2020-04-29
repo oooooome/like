@@ -28,8 +28,7 @@ def frame_resize(frame, w, h):
         res = cv2.resize(new_frame, (300, 300), interpolation=cv2.INTER_CUBIC)
         return res
 
-
-if __name__ == '__main__':
+def deom1():
     cp = cv2.VideoCapture(file)
     if not cp.isOpened():
         print("video open error!")
@@ -46,7 +45,7 @@ if __name__ == '__main__':
 
     # print(frames)
     for i in range(int(frames)):
-    # for i in range(100):
+        # for i in range(100):
         ret, frame = cp.read()
         if not ret:
             print("file end")
@@ -72,3 +71,52 @@ if __name__ == '__main__':
             cv2.putText(roi, "like", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 1)
         video_writer.write(roi)
         # print(valTest)
+
+
+def deom2():
+    cameraCapture = cv2.VideoCapture(0)
+    cameraCapture.open(0)
+
+    cv2.namedWindow('show')
+
+    fps = cameraCapture.get(cv2.CAP_PROP_FPS)
+    frames = cameraCapture.get(cv2.CAP_PROP_FRAME_COUNT)
+    width = int(cameraCapture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cameraCapture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # video_writer = cv2.VideoWriter(filename=out_file, fourcc=fourcc, fps=fps,
+    #                                frameSize=(300, 300))
+
+    clf = joblib.load(model_path + "svm_efd_" + "train_model.m")
+
+    ret, frame = cameraCapture.read()
+
+    while ret:
+        cv2.waitKey(1)
+        ret, frame = cameraCapture.read()
+        reframe = frame_resize(frame, width, height)
+        roi, res = pic.binaryMask(reframe, 0, 0, 300, 300)
+
+        img, d = fd.fourierDesciptor(res)
+        descirptor_in_use = abs(d)
+        temp = descirptor_in_use[1]
+        feature = []
+        for k in range(1, len(descirptor_in_use)):
+            x_record = int(100 * descirptor_in_use[k] / temp)
+            feature.append(x_record)
+
+        returnVec = np.zeros((1, N))
+        for i in range(N):
+            returnVec[0, i] = int(feature[i])
+        valTest = clf.predict(returnVec)
+        if valTest == 11:
+            cv2.putText(roi, "like", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 1)
+        # video_writer.write(roi)
+        cv2.imshow('show', roi)
+
+
+    cameraCapture.release()
+
+
+if __name__ == '__main__':
+    deom2()
