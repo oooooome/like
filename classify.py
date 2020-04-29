@@ -93,7 +93,7 @@ def test_SVM(clf,N):
 		classNum = int(fileNameStr.split('_')[0])
 		vectorTest = txtToVector(test_path+fileNameStr,N)
 		valTest = clf.predict(vectorTest)
-		if classNum == 9:
+		if classNum == 11:
 			print("分类返回结果为%d\t真实结果为%d" % (valTest, classNum))
 		if valTest != classNum:
 			errorCount += 1
